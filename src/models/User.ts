@@ -1,6 +1,6 @@
-import axios, {AxiosResponse} from 'axios';
 import {Eventing} from "./Eventing";
 import {Sync} from "./Sync";
+import {Attributes} from "./Attributes";
 
 export interface UserProps {
   id?: number;
@@ -11,14 +11,11 @@ export interface UserProps {
 export class User {
   public events: Eventing = new Eventing();
   public sync: Sync<UserProps> = new Sync('http://localhost:3000/users');
+  public attributes: Attributes<UserProps>;
 
-  constructor(private data: UserProps) {}
-
-  get(propName: string): string | number {
-    return this.data[propName];
+  constructor(attrs: UserProps) {
+    this.attributes = new Attributes<UserProps>(attrs);
   }
 
-  set(update: UserProps) {
-    Object.assign(this.data, update);
-  }
+
 }

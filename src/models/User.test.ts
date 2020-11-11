@@ -3,26 +3,26 @@ import {expect} from "@jest/globals";
 
 test('creating user', () => {
   const user = new User({name: 'John', age: 27});
-  expect(user.get('name')).toBe('John');
-  expect(user.get('age')).toBe(27);
+  expect(user.attributes.get('name')).toBe('John');
+  expect(user.attributes.get('age')).toBe(27);
 });
 
 test('update user', () => {
   const user = new User({name: 'John', age: 27});
-  user.set({name: 'Alex', age: 28});
-  expect(user.get('name')).toBe('Alex');
-  expect(user.get('age')).toBe(28);
+  user.attributes.set({name: 'Alex', age: 28});
+  expect(user.attributes.get('name')).toBe('Alex');
+  expect(user.attributes.get('age')).toBe(28);
 });
 
 test('update user one field', () => {
   const user = new User({name: 'John', age: 27});
-  user.set({name: 'Alex'});
-  expect(user.get('name')).toBe('Alex');
+  user.attributes.set({name: 'Alex'});
+  expect(user.attributes.get('name')).toBe('Alex');
 });
 
 test('uninitialized user', () => {
   const user = new User({});
-  expect(user.get('name')).toBeUndefined();
+  expect(user.attributes.get('name')).toBeUndefined();
 });
 
 test('add event to user', () => {
