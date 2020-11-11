@@ -1,4 +1,4 @@
-import {User} from "../src/models/User";
+import {User} from "./User";
 import {expect} from "@jest/globals";
 
 test('creating user', () => {
@@ -27,17 +27,17 @@ test('uninitialized user', () => {
 
 test('add event to user', () => {
   const user = new User({});
-  user.on('change', () => console.log('123'));
-  expect(user.events['change']).toHaveLength(1);
+  user.events.on('change', () => console.log('123'));
+  expect(user.events.events['change']).toHaveLength(1);
 });
 
 test('trigger one event on user', () => {
   const user = new User({});
   const mockCallback = jest.fn();
-  user.on('change', mockCallback);
-  user.trigger('change');
+  user.events.on('change', mockCallback);
+  user.events.trigger('change');
   expect(mockCallback.mock.calls).toHaveLength(1);
-  user.trigger('change');
+  user.events.trigger('change');
   expect(mockCallback.mock.calls).toHaveLength(2);
 });
 
@@ -45,9 +45,9 @@ test('trigger multiple events on user', () => {
   const user = new User({});
   const mockCallback1 = jest.fn();
   const mockCallback2 = jest.fn();
-  user.on('change', mockCallback1);
-  user.on('change', mockCallback2);
-  user.trigger('change');
+  user.events.on('change', mockCallback1);
+  user.events.on('change', mockCallback2);
+  user.events.trigger('change');
   expect(mockCallback1.mock.calls).toHaveLength(1);
   expect(mockCallback2.mock.calls).toHaveLength(1);
 });
@@ -55,7 +55,7 @@ test('trigger multiple events on user', () => {
 test('event of other type not triggers on user', () => {
   const user = new User({});
   const mockCallback = jest.fn();
-  user.on('change', mockCallback);
-  user.trigger('click');
+  user.events.on('change', mockCallback);
+  user.events.trigger('click');
   expect(mockCallback.mock.calls).toHaveLength(0);
 });
