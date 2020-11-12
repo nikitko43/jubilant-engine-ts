@@ -23,7 +23,7 @@ test('collection can fetch list of users', (done) => {
     expect(collection.models[1].get('id')).toBe(2);
     expect(collection.models[1].get('name')).toBe('Alex');
     expect(collection.models[1].get('age')).toBe(23);
-    done();
+    done?.();
   });
   collection.fetch();
 });
