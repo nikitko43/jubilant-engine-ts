@@ -1,11 +1,11 @@
-import axios, {AxiosPromise} from "axios";
-
+import axios, { AxiosPromise } from 'axios';
+import { ModelSync } from './Model';
 
 interface HasID {
   id?: number;
 }
 
-export class Sync<T extends HasID> {
+export class ApiSync<T extends HasID> implements ModelSync<T> {
   constructor(public rootURL: string) {}
 
   fetch(id: number): AxiosPromise {
@@ -17,8 +17,7 @@ export class Sync<T extends HasID> {
 
     if (!id) {
       return axios.post(this.rootURL, data);
-    } else {
-      return axios.put(`${this.rootURL}/${id}`, data);
     }
+    return axios.put(`${this.rootURL}/${id}`, data);
   }
 }

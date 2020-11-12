@@ -1,5 +1,5 @@
-import {Eventing} from "./Eventing";
-import {expect} from "@jest/globals";
+import { expect, test, jest } from '@jest/globals';
+import { Eventing } from './Eventing';
 
 test('Eventing with one listener', () => {
   const events = new Eventing();
@@ -24,4 +24,4 @@ test('Eventing with multiple listeners', () => {
   events.trigger('change');
   expect(mockCallback1.mock.calls).toHaveLength(2);
   expect(mockCallback2.mock.calls).toHaveLength(1);
-})
+});

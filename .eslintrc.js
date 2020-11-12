@@ -20,6 +20,8 @@ module.exports = {
       js: 'never',
       ts: 'never',
     }],
+    '@typescript-eslint/no-unused-vars': 'off',
+    '@typescript-eslint/no-unused-vars-experimental': 'error',
   },
   settings: {
     'import/resolver': {

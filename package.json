@@ -22,6 +22,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@jest/globals": "^26.6.2",
     "abab": "^2.0.5",
     "acorn": "^7.4.1",
     "acorn-globals": "^6.0.0",

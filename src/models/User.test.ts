@@ -1,46 +1,44 @@
-import {User} from "./User";
-import {expect} from "@jest/globals";
-import axios from "axios";
-import {Sync} from "./Sync";
+import { expect, test, jest } from '@jest/globals';
+import axios from 'axios';
+import { User } from './User';
 
 jest.mock('axios');
 const mockedAxios = axios as jest.Mocked<typeof axios>;
 
 test('creating user', () => {
-  const user = new User({name: 'John', age: 27});
+  const user = User.buildUser({ name: 'John', age: 27 });
   expect(user.get('name')).toBe('John');
   expect(user.get('age')).toBe(27);
 });
 
 test('update user', () => {
-  const user = new User({name: 'John', age: 27});
-  user.attributes.set({name: 'Alex', age: 28});
+  const user = User.buildUser({ name: 'John', age: 27 });
+  user.set({ name: 'Alex', age: 28 });
 
   expect(user.get('name')).toBe('Alex');
   expect(user.get('age')).toBe(28);
 });
 
 test('update user one field', () => {
-  const user = new User({name: 'John', age: 27});
-  user.attributes.set({name: 'Alex'});
+  const user = User.buildUser({ name: 'John', age: 27 });
+  user.set({ name: 'Alex' });
 
   expect(user.get('name')).toBe('Alex');
 });
 
 test('uninitialized user', () => {
-  const user = new User({});
+  const user = User.buildUser({});
   expect(user.get('name')).toBeUndefined();
 });
 
-test('add event to user', () => {
-  const user = new User({});
-  user.on('change', () => console.log('123'));
-
-  expect(user.events.events['change']).toHaveLength(1);
+test('add event to user', (done) => {
+  const user = User.buildUser({});
+  user.on('some action', () => done());
+  user.trigger('some action');
 });
 
 test('trigger one event on user', () => {
-  const user = new User({});
+  const user = User.buildUser({});
   const mockCallback = jest.fn();
 
   user.on('change', mockCallback);
@@ -51,7 +49,7 @@ test('trigger one event on user', () => {
 });
 
 test('trigger multiple events on user', () => {
-  const user = new User({});
+  const user = User.buildUser({});
   const mockCallback1 = jest.fn();
   const mockCallback2 = jest.fn();
 
@@ -64,7 +62,7 @@ test('trigger multiple events on user', () => {
 });
 
 test('event of other type not triggers on user', () => {
-  const user = new User({});
+  const user = User.buildUser({});
   const mockCallback = jest.fn();
 
   user.on('change', mockCallback);
@@ -74,82 +72,84 @@ test('event of other type not triggers on user', () => {
 });
 
 test('event change fired on set call', () => {
-  const user = new User({name: 'John', age: 27});
+  const user = User.buildUser({ name: 'John', age: 27 });
   const mockCallback = jest.fn();
 
   user.on('change', mockCallback);
-  user.set({name: 'Alex', age: 29});
-  user.set({name: 'Alex', age: 30});
+  user.set({ name: 'Alex', age: 29 });
+  user.set({ name: 'Alex', age: 30 });
 
   expect(mockCallback.mock.calls).toHaveLength(2);
 });
 
 test('user correct fetch', () => {
-  const user = new User({id: 1});
+  const user = User.buildUser({ id: 1 });
 
   user.on('change', () => {
     expect(user.get('name')).toBe('John');
     expect(user.get('age')).toBe(28);
-  })
+  });
 
-  mockedAxios.get.mockResolvedValue({data: {id: 1, name: 'John', age: 28}});
+  mockedAxios.get.mockResolvedValue({ data: { id: 1, name: 'John', age: 28 } });
   user.fetch();
 
-  expect(mockedAxios.get).toHaveBeenCalledWith("http://localhost:3000/users/1");
+  expect(mockedAxios.get).toHaveBeenCalledWith('http://localhost:3000/users/1');
 });
 
 test('user try to fetch without id', () => {
-  const user = new User({});
+  const user = User.buildUser({});
 
   expect(() => user.fetch()).toThrowError();
 });
 
 test('new user correct save', (done) => {
-  const data = {name: 'John', age: 28}
-  const dataWithID = {id: 6, ...data};
-  const user = new User(data);
-  mockedAxios.post.mockResolvedValue({data: dataWithID});
+  const data = { name: 'John', age: 28 };
+  const dataWithID = { id: 6, ...data };
+  const user = User.buildUser(data);
+  mockedAxios.post.mockResolvedValue({ data: dataWithID });
 
   user.on('change', () => {
     try {
-      expect(user.attributes.getAll()).toStrictEqual(dataWithID);
+      expect(user.get('id')).toBe(6);
+      expect(user.get('name')).toBe('John');
+      expect(user.get('age')).toBe(28);
       done();
     } catch (error) {
       done(error);
     }
-  })
+  });
   user.save();
 
-  expect(mockedAxios.post).toHaveBeenCalledWith("http://localhost:3000/users", data);
+  expect(mockedAxios.post).toHaveBeenCalledWith('http://localhost:3000/users', data);
 });
 
-
 test('user with id correct save ', (done) => {
-  const data = {id: 6, name: 'John', age: 28};
-  const user = new User(data);
-  mockedAxios.put.mockResolvedValue({data});
+  const data = { id: 6, name: 'John', age: 28 };
+  const user = User.buildUser(data);
+  mockedAxios.put.mockResolvedValue({ data });
 
   user.on('change', () => {
     try {
-      expect(user.attributes.getAll()).toStrictEqual(data);
+      expect(user.get('id')).toBe(6);
+      expect(user.get('name')).toBe('John');
+      expect(user.get('age')).toBe(28);
       done();
     } catch (error) {
       done(error);
     }
-  })
+  });
   user.save();
 
-  expect(mockedAxios.put).toHaveBeenCalledWith("http://localhost:3000/users/6", data);
+  expect(mockedAxios.put).toHaveBeenCalledWith('http://localhost:3000/users/6', data);
 });
 
-
 test('user with id correct save ', (done) => {
-  const data = {id: 6, name: 'John', age: 28};
-  const user = new User(data);
-  mockedAxios.put.mockRejectedValue({data: {detail: 'error'}});
+  const data = { id: 6, name: 'John', age: 28 };
+  const user = User.buildUser(data);
+  mockedAxios.put.mockRejectedValue({ data: { detail: 'error' } });
 
   user.on('error', () => {
     done();
-  })
+  });
   user.save();
 });
