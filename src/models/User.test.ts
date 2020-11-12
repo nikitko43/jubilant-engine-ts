@@ -143,7 +143,7 @@ test('user with id correct save ', (done) => {
   expect(mockedAxios.put).toHaveBeenCalledWith('http://localhost:3000/users/6', data);
 });
 
-test('user with id correct save ', (done) => {
+test('user with id correct save', (done) => {
   const data = { id: 6, name: 'John', age: 28 };
   const user = User.buildUser(data);
   mockedAxios.put.mockRejectedValue({ data: { detail: 'error' } });
@@ -152,4 +152,18 @@ test('user with id correct save ', (done) => {
     done();
   });
   user.save();
+});
+
+test('build user collection', (done) => {
+  const collection = User.buildUserCollection();
+  mockedAxios.get.mockResolvedValue({
+    data: [{ id: 1, name: 'John', age: 28 }, { id: 2, name: 'Alex', age: 23 }],
+  });
+
+  collection.on('change', () => {
+    expect(collection.models[0].get('name')).toBe('John');
+    expect(collection.models[1].get('name')).toBe('Alex');
+    done();
+  });
+  collection.fetch();
 });

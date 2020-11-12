@@ -25,11 +25,17 @@ interface HasID {
 export class Model<T extends HasID> {
   constructor(private attributes: ModelAttributes<T>, private events: ModelEvents, private sync: ModelSync<T>) {}
 
-  on = this.events.on;
+  get on() {
+    return this.events.on;
+  }
 
-  trigger = this.events.trigger;
+  get trigger() {
+    return this.events.trigger;
+  }
 
-  get = this.attributes.get;
+  get get() {
+    return this.attributes.get;
+  }
 
   set(update: T): void {
     this.attributes.set(update);
