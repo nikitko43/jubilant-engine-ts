@@ -10,3 +10,9 @@ test('Attributes set and get', () => {
   expect(attrs.get('name')).toBe('Alex');
   expect(attrs.get('age')).toBe(28);
 });
+
+test('Attributes getAll', () => {
+  const data = {name: 'John', age: 32};
+  const attrs = new Attributes<UserProps>(data);
+  expect(attrs.getAll()).toBe(data);
+});
