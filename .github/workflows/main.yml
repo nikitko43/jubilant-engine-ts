@@ -27,9 +27,7 @@ jobs:
           node-version: 12.x
       - name: Install modules
         run: npm install
-      - name: Run tests
-        run: jest test
-      - run: yarn test --coverage # Run test
+      - run: npm run test -- --coverage # Run test
       - run: bash <(curl -s https://codecov.io/bash) # Upload to Codecov
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
