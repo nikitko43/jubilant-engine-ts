@@ -7,3 +7,4 @@
 
 Nothing much, just some learning project.
 Outside of course flow added tests(Jest), ESLint, Github actions with test coverage.
+Using some techniques from Backbone.js and Marionette.js 
