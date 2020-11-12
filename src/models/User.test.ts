@@ -113,9 +113,9 @@ test('new user correct save', (done) => {
       expect(user.get('id')).toBe(6);
       expect(user.get('name')).toBe('John');
       expect(user.get('age')).toBe(28);
-      done();
+      done?.();
     } catch (error) {
-      done(error);
+      done?.(error);
     }
   });
   user.save();
@@ -133,9 +133,9 @@ test('user with id correct save ', (done) => {
       expect(user.get('id')).toBe(6);
       expect(user.get('name')).toBe('John');
       expect(user.get('age')).toBe(28);
-      done();
+      done?.();
     } catch (error) {
-      done(error);
+      done?.(error);
     }
   });
   user.save();
@@ -149,7 +149,7 @@ test('user with id correct save', (done) => {
   mockedAxios.put.mockRejectedValue({ data: { detail: 'error' } });
 
   user.on('error', () => {
-    done();
+    done?.();
   });
   user.save();
 });
@@ -163,7 +163,7 @@ test('build user collection', (done) => {
   collection.on('change', () => {
     expect(collection.models[0].get('name')).toBe('John');
     expect(collection.models[1].get('name')).toBe('Alex');
-    done();
+    done?.();
   });
   collection.fetch();
 });
