@@ -98,6 +98,11 @@ test('user correct fetch', () => {
   expect(mockedAxios.get).toHaveBeenCalledWith("http://localhost:3000/users/1");
 });
 
+test('user try to fetch without id', () => {
+  const user = new User({});
+
+  expect(() => user.fetch()).toThrowError();
+});
 
 test('new user correct save', (done) => {
   const data = {name: 'John', age: 28}
@@ -135,4 +140,16 @@ test('user with id correct save ', (done) => {
   user.save();
 
   expect(mockedAxios.put).toHaveBeenCalledWith("http://localhost:3000/users/6", data);
+});
+
+
+test('user with id correct save ', (done) => {
+  const data = {id: 6, name: 'John', age: 28};
+  const user = new User(data);
+  mockedAxios.put.mockRejectedValue({data: {detail: 'error'}});
+
+  user.on('error', () => {
+    done();
+  })
+  user.save();
 });
